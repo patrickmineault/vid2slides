@@ -7,7 +7,8 @@ def extract_gif(sequence, output_file, max_size):
     sources = []
     for _, el in enumerate(sequence['sequence']):
         if el['type'] == 'slide' and el['title']:
-            sources.append(el['source'])
+            if el['source'] not in sources:
+                sources.append(el['source'])
 
     fps = 1
     clip = mpy.ImageSequenceClip(sources, fps=fps)

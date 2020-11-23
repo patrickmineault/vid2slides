@@ -12,6 +12,7 @@ import os
 import pickle
 import pytesseract
 from pytesseract import Output
+import subprocess
 import sklearn
 import sklearn.cluster
 import tempfile
@@ -108,8 +109,17 @@ def extract_thumbnails(video,
     else:
         wo, ho = int(lo_size[1] * aspect_ratio), lo_size[1]
 
-    os.system(f'ffmpeg -i {video} -s {wo}x{ho} -r 1/{thumb_interval}'
-              f' -f image2 {lo_dir}/thumb-%04d.jpg')
+    subprocess.run([
+        'ffmpeg',
+        '-i',
+        video,
+        '-s',
+        f'{wo}x{ho}',
+        '-r',
+        f'{1/thumb_interval}',
+        '-f',
+        'image2',
+        f'{lo_dir}/thumb-%04d.jpg'], shell=False)
 
 
 def extract_frames(video, hi_dir, hi_size, times):
@@ -130,6 +140,7 @@ def extract_frames(video, hi_dir, hi_size, times):
         nframes.append(int(framerate * (2 * (time + 1))))
 
     vr = VideoReader(video, ctx=cpu(0))
+    nframes = [min(vr._num_frame - 1, x) for x in nframes]
     frames = vr.get_batch(nframes).asnumpy()
     
     for i in range(len(nframes)):
@@ -149,7 +160,9 @@ def detect_faces(the_dir):
     """
     Read faces in a directory and report on them.
     """
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    location = os.path.join(os.path.dirname(__file__), 
+                            '../models/haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier(location)
     detections = []
     for im_name in sorted(glob.glob(os.path.join(the_dir, 'thumb*.jpg'))):
         im = cv2.imread(im_name)
@@ -176,7 +189,7 @@ def detect_faces(the_dir):
     if len(small_faces) > 8:
         kmeans = sklearn.cluster.KMeans()
         classes = kmeans.fit_predict(np.array(small_faces))
-        biggest_class = kmeans.cluster_centers_[np.bincount(classes).argmax()]
+        biggest_class = kmeans.cluster_centers_[np.bincount(classes).argmax()].tolist()
     else:
         biggest_class = []
 
@@ -346,6 +359,7 @@ def extract_keyframes_from_video(target, output_json, thumb_dir):
     latest_slide = {'start_index': 0}
     slides = []
     
+    existing_sources = []
     for i, num in enumerate(full_sequence):
         if num != last_num:
             # Write things down
@@ -358,7 +372,6 @@ def extract_keyframes_from_video(target, output_json, thumb_dir):
 
             latest_slide['source'] = os.path.join(hi_dir, 
                 f'thumb-{offset+1:04}.png')
-            slides.append(latest_slide)
 
             if num == -1:
                 latest_slide = {

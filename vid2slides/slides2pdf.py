@@ -1,22 +1,38 @@
 import argparse
+import cv2
 import glob
 import json
 import moviepy.editor as mpy
 import os
+import subprocess
 import tempfile
 
+
 def extract_pdf(sequence, output_file):
+    rgy = slice(sequence['crop'][1], sequence['crop'][1] + sequence['crop'][3])
+    rgx = slice(sequence['crop'][0], sequence['crop'][0] + sequence['crop'][2])
+    
     sources = []
     for _, el in enumerate(sequence['sequence']):
         if el['type'] == 'slide' and el['title']:
-            sources.append(el['source'])
+            im = cv2.imread(el['source'])
+            filename = el['source'][:-4] + '.cropped.png'
+            cv2.imwrite(filename, im[rgy, rgx])
+            if filename not in sources:
+                sources.append(filename)
+
 
     with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
         f.write('\n'.join(sources))
 
-    cmd = f'tesseract "{f.name}" "{output_file}" pdf'
-    print(cmd)
-    os.system(cmd)
+    if output_file.endswith('.pdf'):
+        output_file = output_file[:-4]
+
+    subprocess.run([
+        "tesseract",
+        f.name,
+        output_file,
+        "pdf"], shell=False)
 
 
 if __name__ == "__main__":
