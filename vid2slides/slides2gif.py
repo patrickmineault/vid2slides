@@ -26,7 +26,6 @@ to create json first"""
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument("in_path", help='Input json path')
     parser.add_argument("out_path", help='Output gif path')
-    parser.add_argument("--tmp_path", help='Temporary path for thumbnails')
     
     args = parser.parse_args()
 
