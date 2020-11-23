@@ -34,11 +34,12 @@ The result is an output json file that contains info about slides extract from t
 Use the resulting json file to create a YouTube playlist, or use one of the two utils:
 
 `python slides2pdf.py input_json output_pdf`
-`python slides2gif.py input_json output_gid`
+`python slides2gif.py input_json output_gif`
 
 ## How it works
 
-* Extract thumbnails via ffmpeg
+* Extract thumbnails via `ffmpeg`.
+* Throws out frames with full-screen faces (detected with OpenCV)
 * Detect changes in slides using a hidden Markov model (HMM).
-* Detects a crop frame around slides using OpenCV
-* Uses Tesseract for OCR
+* Detects a crop frame around slides using OpenCV.
+* Uses Tesseract for OCR.
