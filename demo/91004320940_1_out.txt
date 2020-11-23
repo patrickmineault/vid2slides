@@ -1,0 +1,19 @@
+00:00 Start
+00:00:20 Fast and scalable learning of ‘generative models for chaotic dynamical systems and neural data
+00:00:26 Fast and scalable learning of generative models for chaotic dynamical systems and neural data
+00:01:06 - Adobe Acrobat Reader DC Anzeige Unterschreiben Fenster Hilfe
+00:01:12 Motivation
+00:02:16 Inferring Generative Models from Data
+00:03:00 Piece-wise Linear Recurrent Neural Ne
+00:04:14 Increasing Computational Capacity +
+00:04:56 Basis Expansion
+00:05:30 Variational Inference
+00:06:48 Benchmark Dynamical Systems
+00:07:24 Results - Lorenz System
+00:08:22 Results - Lorenz System
+00:09:20 Results - Lorenz-96 System
+00:10:10 Results - Lorenz-96 System
+00:11:14 Summary
+00:12:20 Summary
+00:13:34 Piece-wise Linear Recurrent Neural Ne
+00:14:04 Global vs. Local Metrics
