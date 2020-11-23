@@ -1,0 +1,19 @@
+name: vid2slides
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - ffmpeg=4.3.1
+  - pip=20.2.2=py38_0
+  - python=3.8.5=h7579374_1
+  - setuptools=49.6.0=py38_0
+  - tesseract=4.1.1
+  - pip:
+    - decord==0.4.2
+    - ffmpeg-python==0.2.0
+    - imageio==2.9.0
+    - imageio-ffmpeg==0.4.2
+    - moviepy==1.0.3
+    - opencv-python==4.4.0.46
+    - pytesseract==0.3.6
+    - scikit-learn==0.23.2
